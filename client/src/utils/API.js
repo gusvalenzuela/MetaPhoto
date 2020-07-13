@@ -1,5 +1,4 @@
 import axios from "axios";
-const baseURL = "https://metaphotojs.herokuapp.com/";
 
 export default {
   // Gets all routes by lat,lon
@@ -83,34 +82,28 @@ export default {
 
   register: function (NewUser) {
     console.log("step 2", NewUser);
-    return axios({
-      method: "POST",
-      data: NewUser,
+    return axios.post(`/register`, NewUser, {
       withCredentials: true,
-      url: `${baseURL}register`,
-    })
+    });
   },
   login: function (loginUsername, loginPassword) {
-    return axios({
-      method: "POST",
-      data: {
+    return axios.post(
+      `/login`,
+      {
         username: loginUsername,
         password: loginPassword,
       },
-      withCredentials: true,
-      url: `${baseURL}login`,
-    });
+      {
+        withCredentials: true,
+      }
+    );
   },
   logout: function () {
     axios.get("/logout");
   },
 
   getUser: function (setData) {
-    axios({
-      method: "GET",
-      withCredentials: true,
-      url: `${baseURL}user`,
-    }).then((res) => {
+    axios.get(`/user`).then((res) => {
       setData(res.data);
       // console.log(res);
     });

@@ -8,7 +8,7 @@ import UserContext from "../context/userContext";
 import MenuBar from "../Components/Menu";
 
 const client = require("filestack-js").init(
-  process.env.REACT_APP_FILESTACK_KEY || "ASqRy0SxoR0GwFXKGloCDz"
+  process.env.REACT_APP_FILESTACK_KEY
 );
 
 function Upload() {
@@ -167,7 +167,6 @@ function Upload() {
     onUploadDone: (files) => {
       // Called when all files have been uploaded.
       files.userID = UserData.user._id; // here or in the API.postPhoto
-      console.log(files);
       API.postPhoto(files); // saving files' relevant info (url, handle, etc.) to DB
       const handles = files.filesUploaded.map((each) => each.handle);
       setHandles(handles); // setting current handles to work with

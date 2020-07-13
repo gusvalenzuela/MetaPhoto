@@ -18,17 +18,18 @@ const MenuBar = () => {
   return (
     <Container>
       {userData.user.username ? (
-        <Menu stackable id="navMenu" attached="bottom" widths="5">
+        <Menu inverted stackable id="navMenu" attached="bottom">
           <Menu.Item as={Link} to="/explore" name="Explore" />
           <Menu.Item as={Link} to="/myaccount" name="My Account" />
-          <Menu.Item as={Link} to="/upload" name="upload" />
+          <Menu.Item as={Link} to="/upload" name="Upload" />
           <Menu.Item as={Link} to="/resources" name="Resources" />
           <Menu.Item as={Link} to="/logout" name="Logout" onClick={logout} />
         </Menu>
       ) : (
-        <Menu stackable id="navMenu" attached="bottom" widths="3">
+        <Menu inverted stackable id="navMenu" attached="bottom">
           <Menu.Item as={Link} to="/explore" name="Explore" />
           <Menu.Item as={Link} to="/resources" name="Resources" />
+          <Menu.Item as={Link} to="/upload" name="Upload" />
           <Menu.Item as={Link} to="/login" name="Login" />
         </Menu>
       )}

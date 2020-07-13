@@ -17,6 +17,7 @@ import NotFound from "./pages/404";
 import UserContext from "../src/context/userContext";
 import "./index.css";
 import "./App.css";
+require(`dotenv`).config();
 
 export default function App() {
   const [user, setUser] = useState({});
@@ -48,24 +49,17 @@ export default function App() {
             <Resources />
           </Route>
           <Route exact path="/upload">
-            {!Object.keys(user).length ? <Redirect to="/login" /> : <Upload />}
+            <Upload />
+            {/* {!Object.keys(user).length ? <Redirect to="/login" /> : <Upload />} */}
           </Route>
           <Route exact path="/login">
-            {!Object.keys(user).length ? (
-              <LogIn />
-            ) : (
-                <Redirect to="/" />
-              )}
+            {!Object.keys(user).length ? <LogIn /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/signup">
-            {!Object.keys(user).length ? (
-              <SignUp />
-            ) : (
-                <Redirect to="/" />
-              )}
+            {!Object.keys(user).length ? <SignUp /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/settings">
-          <Settings />
+            <Settings />
           </Route>
           <Route exact path="/logout">
             {!Object.keys(user).length ? <LogOut /> : <Redirect to="/login" />}

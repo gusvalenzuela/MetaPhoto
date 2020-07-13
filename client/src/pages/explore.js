@@ -19,21 +19,11 @@ import UTILS from "../utils/utils.js";
 function Explore() {
   const user = useContext(UserContext);
   const [UserPhotos, setUserPhotos] = useState([]);
-  const [newUpdate, setNewUpdate] = useState({});
   const [localClimbs, setLocalClimbs] = useState([]);
   const [searchTerm, setSearchTerm] = useState("Lake Tahoe");
   const [range, setRange] = useState(["30"]);
   const [sortKey, setSortKey] = useState("name");
 
-  // console.log(user)
-
-  function getUserPhotos() {
-    // console.log("step 1");
-    API.getPhoto().then((data) => {
-      // console.log(data);
-      setUserPhotos(data.data);
-    });
-  }
   const style =
     localClimbs.length > 4
       ? { maxHeight: "500px", overflow: "scroll" }
@@ -70,12 +60,12 @@ function Explore() {
     },
   ];
   const Options = [
-    { key: 5, text: "5", value: ["5"], description: "miles" },
-    { key: 10, text: "10", value: ["10"], description: "miles" },
-    { key: 15, text: "15", value: ["15"], description: "miles" },
-    { key: 20, text: "20", value: ["20"], description: "miles" },
-    { key: 25, text: "25", value: ["25"], description: "miles" },
-    { key: 30, text: "30", value: ["30"], description: "miles" },
+    { key: 5, text: "5", value: 5, description: "miles" },
+    { key: 10, text: "10", value: 10, description: "miles" },
+    { key: 15, text: "15", value: 15, description: "miles" },
+    { key: 20, text: "20", value: 20, description: "miles" },
+    { key: 25, text: "25", value: 25, description: "miles" },
+    { key: 30, text: "30", value: 30, description: "miles" },
   ];
 
   const sortOptions = [
@@ -86,8 +76,38 @@ function Explore() {
   ];
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(getLocalClimbs);
-    getUserPhotos();
+    // get location from browser to get climbs
+    // on mount
+    navigator.geolocation.getCurrentPosition((resp) => {
+      // console.log(resp);
+      API.getRoutesByNavigator(resp, 30).then((data) => {
+        let { routes } = data.data;
+        let Routes = [];
+        routes.forEach((route) => {
+          if (route.imgMedium !== "") {
+            Routes.push(route);
+          }
+        });
+        var updatedRoutes = Routes.map((route) => {
+          // adding a "proximity" factor to use in sorting
+          let proximity = UTILS.calculateDistance(
+            resp.coords.latitude,
+            resp.coords.longitude,
+            route.latitude,
+            route.longitude,
+            "K"
+          );
+          return { ...route, proximity: proximity };
+        });
+
+        setLocalClimbs(updatedRoutes);
+      });
+    });
+
+    API.getPhoto().then((data) => {
+      // console.log(data);
+      setUserPhotos(data.data);
+    });
   }, []);
 
   const {
@@ -120,53 +140,20 @@ function Explore() {
     });
   }
 
-  function getLocalClimbs(Data) {
-    API.getRoutesByNavigator(Data, range).then((data) => {
-      let { routes } = data.data;
-      let Routes = [];
-      routes.forEach((route) => {
-        if (route.imgMedium !== "") {
-          Routes.push(route);
-        }
-      });
-      var updatedRoutes = Routes.map((route) => {
-        // adding a "proximity" factor to use in sorting
-        let proximity = UTILS.calculateDistance(
-          Data.coords.latitude,
-          Data.coords.longitude,
-          route.latitude,
-          route.longitude,
-          "K"
-        );
-        return { ...route, proximity: proximity };
-      });
-
-      setLocalClimbs(updatedRoutes);
-    });
-  }
-
-  function handleFavorite(evt, type) {
-    API.postFav(evt.target.id, {
-      typeOf: type,
-      ID: evt.target.id,
-    }).then(() => {
-      setNewUpdate({ ...newUpdate }); // "tricking" it to refresh photoratings
-    });
-  }
-
   const [currentSort, setCurrentSort] = useState("Name");
 
   return (
     <Container id="mainContainer">
+      <MenuBar />
       <Header as="h1" id="heading" attached="top">
         Routes Near: {searchTerm ? upperCaser(searchTerm) : "You!"}
       </Header>
-      <MenuBar />
+
       <Container textAlign="center" text style={{ margin: "5px 0" }}>
         <Input
           style={{ width: "99%", margin: "auto", padding: "3px 0" }}
           fluid
-          placeholder="City,   State"
+          placeholder="City, State"
           onChange={(e) => setSearchTerm(e.target.value)}
           labelPosition="right"
           label={{
@@ -187,7 +174,8 @@ function Explore() {
                     if (route.imgMedium !== "") {
                       Routes.push(route);
                     }
-                  }); var updatedRoutes = Routes.map((route) => {
+                  });
+                  var updatedRoutes = Routes.map((route) => {
                     // adding a "proximity" factor to use in sorting
                     let proximity = UTILS.calculateDistance(
                       coordsObj.coords.latitude,
@@ -198,43 +186,43 @@ function Explore() {
                     );
                     return { ...route, proximity: proximity };
                   });
-            
+
                   setLocalClimbs(updatedRoutes);
                 });
               });
             },
           }}
         />
-        <Label style={{ padding: "0 0 3px" }}>
-          <Dropdown
-            as={Label}
-            inline
-            text={`Sort Search Results by: ${currentSort} `}
-            options={sortOptions}
-            onChange={(e, value) => {
-              setSortKey(value.value);
-              let yes = value.options.filter((i) =>
-                i.value === value.value ? i.text : null
-              );
-              setCurrentSort(yes[0].text)
-            }}
-          />
-          <Button
-            className={getClassNamesFor(sortKey) || sortConfig.direction}
-            onClick={() => {
-              requestSort(sortKey);
-            }}
-          />
-
-          <Dropdown
-            as={Label}
-            inline
-            text={"Search Radius: " + range + " miles"}
-            options={Options}
-            onChange={(e, value) => setRange(value.value)}
-          />
-        </Label>
+        <Dropdown
+          as={Label}
+          inline
+          text={"Radius: " + range + " miles"}
+          options={Options}
+          onChange={(e, value) => setRange(value.value)}
+        />
       </Container>
+
+      <Label style={{ margin: "auto", display: "table" }}>
+        <Dropdown
+          as={Label}
+          inline
+          text={`Sort Search Results by: ${currentSort} `}
+          options={sortOptions}
+          onChange={(e, value) => {
+            setSortKey(value.value);
+            let yes = value.options.filter((i) =>
+              i.value === value.value ? i.text : null
+            );
+            setCurrentSort(yes[0].text);
+          }}
+        />
+        <Button
+          className={getClassNamesFor(sortKey) || sortConfig.direction}
+          onClick={() => {
+            requestSort(sortKey);
+          }}
+        />
+      </Label>
 
       <Container>
         <Tab panes={user.user.username ? panes : [panes[0]]} />
@@ -244,25 +232,3 @@ function Explore() {
 }
 
 export default Explore;
-
-// localClimbs  is an array of objects
-// strucutre below
-
-// imgSqSmall are small square images the others are wonky sizes
-// {
-// id: 112840319
-// imgMedium: "https://cdn2.apstatic.com/photos/climb/114032367_medium_1516661975.jpg"
-// imgSmall: "https://cdn2.apstatic.com/photos/climb/114032367_small_1516661975.jpg"
-// imgSmallMed: "https://cdn2.apstatic.com/photos/climb/114032367_smallMed_1516661975.jpg"
-// imgSqSmall: "https://cdn2.apstatic.com/photos/climb/114032367_sqsmall_1516661975.jpg"
-// latitude: 38.682
-// location: (6) ["California", "Lake Tahoe", "Highway 50 Corridor", "Folsom", "Rainbow Boulders", "Area B"]
-// longitude: -121.1759
-// name: "The Easter Egg"
-// pitches: ""
-// rating: "V4"
-// starVotes: 3
-// stars: 4.7
-// type: "Boulder"
-// url: "https://www.mountainproject.com/route/112840319/the-easter-egg"
-// }

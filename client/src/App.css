@@ -19,15 +19,12 @@ body,html {
   background-color: rgba(206, 198, 198, 0.568);
 }
 #heading {
-  /* background-image: url('./assets/pics/longrock.jpg'); */
-  background-color: rgba(233, 227, 227, 0.0);
-  /* opacity: 0; */
-  height: 25vh;
+  background-color: #fcfcfc21;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   color: #ffffff;
-  font-size: 4em;
+  font-size: 4rem;
   padding: 7% 0;
   border-radius: .28571429rem .28571429rem 0 0;
   text-align: center;

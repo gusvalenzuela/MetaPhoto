@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
-const passportLocal = require("passport-local").Strategy;
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -22,12 +21,12 @@ if (process.env.NODE_ENV === "production") {
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(
-  cors({
-    origin: "https://metaphotojs.herokuapp.com/", // <-- location of the react app were connecting to
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "https://metaphotojs.herokuapp.com/", // <-- location of the react app were connecting to
+//     credentials: true,
+//   })
+// );
 
 app.use(cookieParser("secretcode"));
 app.use(
