@@ -18,7 +18,7 @@ const MenuBar = () => {
   return (
     <Container>
       {userData.user.username ? (
-        <Menu inverted stackable id="navMenu" attached="bottom">
+        <Menu inverted stackable id="navMenu" attached="bottom" widths="6">
           <Menu.Item as={Link} to="/explore" name="Explore" />
           <Menu.Item as={Link} to="/myaccount" name="My Account" />
           <Menu.Item as={Link} to="/upload" name="Upload" />
@@ -26,7 +26,7 @@ const MenuBar = () => {
           <Menu.Item as={Link} to="/logout" name="Logout" onClick={logout} />
         </Menu>
       ) : (
-        <Menu inverted stackable id="navMenu" attached="bottom">
+        <Menu inverted stackable id="navMenu" attached="bottom" widths="4">
           <Menu.Item as={Link} to="/explore" name="Explore" />
           <Menu.Item as={Link} to="/resources" name="Resources" />
           <Menu.Item as={Link} to="/upload" name="Upload" />

@@ -144,11 +144,10 @@ function Explore() {
 
   return (
     <Container id="mainContainer">
-      <MenuBar />
       <Header as="h1" id="heading" attached="top">
-        Routes Near: {searchTerm ? upperCaser(searchTerm) : "You!"}
+        MetaPhoto-GRV
       </Header>
-
+      <MenuBar />
       <Container textAlign="center" text style={{ margin: "5px 0" }}>
         <Input
           style={{ width: "99%", margin: "auto", padding: "3px 0" }}
@@ -225,6 +224,9 @@ function Explore() {
       </Label>
 
       <Container>
+        <Header as="h3" attached="top">
+          Routes Near: {searchTerm ? upperCaser(searchTerm) : "You!"}
+        </Header>
         <Tab panes={user.user.username ? panes : [panes[0]]} />
       </Container>
     </Container>
