@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
 import {
   Button,
   Form,
@@ -11,73 +10,66 @@ import {
   Container,
   Message,
   Modal,
-  Image,
+  // Image,
 } from "semantic-ui-react";
 import API from "../utils/API";
-import MenuBar from "../Components/Menu"
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import UserContext from "../context/userContext";
 
 function LogIn() {
   const user = useContext(UserContext);
-  const [loginUsername, setLoginUsername] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState()
-  // const [user, setUser] = useState({});
-  const history = useHistory();
+  let history = useHistory();
 
-  function login() {
-    API.login(loginUsername, loginPassword).then((res) => {
-      // console.log(user);
-      (res.data === "No User Exists") ?
-        setLoginSuccess(false) :
-        user.Login(res.data)
-      // console.log(res)
-    });
-    // history.replace("/myaccount");
+  const [loginData, setLoginData] = useState({});
+
+  function login(evt) {
+    if (loginData.username && loginData.password) {
+      API.login(loginData.username, loginData.password).then((res) => {
+        res.data === "No User Exists"
+          ? setLoginData({ ...loginData, success: false })
+          : (res.data.password = "hunter2" && user.Login(res.data));
+        if (res.username) {
+          history.replace("/explore");
+        }
+      });
+    }
   }
 
   return (
-    <Container id='mainContainer'>
-      <Header attached='top' as="h1" id="heading">
-        MetaPhoto
+    <Container id="mainContainer">
+      <Header attached="top" as="h1" id="heading">
+        MetaPhoto v.GRV
       </Header>
-      <MenuBar />
       <Grid textAlign="center" verticalAlign="middle">
         <Grid.Column style={{ maxWidth: 450 }}>
-          <Divider horizontal hidden />
-
           <Header as="h2" textAlign="center">
             <Icon name="users" size="mini" /> Log-in to your account
           </Header>
           <Form size="large">
             <Segment>
               <Form.Input
+                required
                 fluid
-                type="userName"
                 icon="user"
                 iconPosition="left"
                 placeholder="Username"
-                onChange={(e) => setLoginUsername(e.target.value)}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, username: e.target.value })
+                }
               />
               <Form.Input
+                type="password"
+                required
                 fluid
                 icon="lock"
                 iconPosition="left"
                 placeholder="Password"
-                type="password"
-                onChange={(e) => setLoginPassword(e.target.value)}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, password: e.target.value })
+                }
               />
 
-              <Button
-                icon="sign in alternate"
-                fluid
-                basic
-                size="large"
-                content='Login'
-                onClick={login}
-              >
-              </Button>
+              <Button content="Login" onClick={login} />
             </Segment>
           </Form>
           <Message attached="bottom" style={{ width: "99%", margin: "auto" }}>
@@ -86,14 +78,21 @@ function LogIn() {
           </Message>
         </Grid.Column>
       </Grid>
-      {(loginSuccess === false) ?
-        <Modal defaultOpen onClose={() => setLoginSuccess('')}>
-
+      {loginData.success === false ? (
+        <Modal
+          defaultOpen
+          onClose={(e) => {
+            setLoginData({});
+            history.replace("/login");
+          }}
+        >
           <Modal.Content>
-            <Container textAlign='center'>Sorry, no user found with that password.</Container>
+            <Container textAlign="center">
+              Sorry, no user found with that password.
+            </Container>
           </Modal.Content>
-        </Modal> :
-        null}
+        </Modal>
+      ) : null}
     </Container>
   );
 }

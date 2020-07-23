@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Card from "../Components/card";
 import { Grid, Header, Container, Divider } from "semantic-ui-react";
 import API from "../utils/API";
-import MenuBar from "../Components/Menu";
 import Background from "../assets/images/HenryXuUnsplash.png";
 import Background2 from "../assets/images/Charles.png";
 
@@ -20,11 +19,10 @@ function Resources() {
   }
 
   return (
-    <Container id="mainContainer">
+    <div id="mainContainer">
       <Header attached="top" id="heading" as="h1">
         Climbing Resources
       </Header>
-      <MenuBar />
       <Divider hidden />
       <Grid
         id="resourceGrid"
@@ -60,7 +58,7 @@ function Resources() {
           })}
         </Container>
       </Grid>
-    </Container>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 module.exports = {
   User: require("./user"),
-  Routes: require("./routes"),
-  Photos: require("./photos"),
-  Resources: require("./resources"),
+  Climb: require("./climb"),
+  Photo: require("./photo"),
+  Resource: require("./resource"),
 };

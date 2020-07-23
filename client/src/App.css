@@ -1,33 +1,39 @@
-body,html {
+body,
+html {
   margin: 0;
   padding: 0;
   height: 100%;
 }
 * {
   box-sizing: border-box;
-  }
-#root {
-  padding: 15px 0;
-  background-image: url('./assets/images/mounatins.png');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
-  min-height: 100%;
 }
-#mainContainer {
-  background-color: rgba(206, 198, 198, 0.568);
+.sort-search-container button {
+  border: none;
+}
+.sort-search-container select {
+  border: none;
+  border-bottom: 1px solid #000;
+}
+.sort-button {
+  padding: 0.2rem !important;
+  margin-left: 1rem !important;
+  border: none !important;
+}
+.sort-button i {
+  font-size: 1.4rem;
 }
 #heading {
-  background-color: #fcfcfc21;
+  /* background-color: #fcfcfc21; */
+  /* color: #000; */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  color: #ffffff;
-  font-size: 4rem;
-  padding: 7% 0;
-  border-radius: .28571429rem .28571429rem 0 0;
+  font-size: 2.5rem;
+  padding: 14px 0;
+  border: none !important;
+  border-radius: 0 !important;
   text-align: center;
+  margin-bottom: 1rem;
 }
 nav {
   margin-right: 10px;
@@ -36,38 +42,49 @@ nav {
   text-align: center;
 }
 
-#cardGrid {
-  background-color: #ffffff;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
-  border-radius: 1em;
-}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
 #para-row {
-    /* The image used */
+  /* The image used */
 
-    /* Full height */
-    height: 70vh;
-    /* Create the parallax scrolling effect */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  /* Full height */
+  height: 70vh;
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+#menuContainer{
+  padding-top: 1.5rem;
+  width: 100%;
+  background-color:#000;
+  height: 10vh;
+}
+#navMenu{
+  background-color: #000;
+  max-width: 925px;
+  margin: auto;
+}
+#mainContainer{
+  padding: 1rem;
+  max-width: 925px;
+  margin: auto;
+}
+#cardGrid {
+  margin: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+#cardGrid .column {
+  margin-bottom: 1rem;
+  margin-right: 1rem;
 }
 #resourceGrid {
   max-width: 1127px !important;
   margin: auto;
-}
-#searchSorter {
-  padding: 0 5px;
-}
-#navMenu {
-  display: flex !important;
 }
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -103,12 +120,12 @@ nav {
 
 /* change picker appearance  */
 .fsp-picker {
-  background: rgba(0,0,0,.288)!important;
+  background: rgba(0, 0, 0, 0.288) !important;
 }
 
 /* update styles for drop area */
 .fsp-picker .fsp-drop-area {
-  background: rgba(0,0,0,.03);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 0;
 }
 
@@ -116,12 +133,13 @@ nav {
 .fsp-picker .fsp-modal {
   background: #fff;
   border-radius: 0;
-  border:none;
-  box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12)
+  border: none;
+  box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2),
+    0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12);
 }
 
 .fsp-picker .fsp-header {
-  color: rgba(0,0,0,.54);
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .fsp-picker .fsp-url-source__input,
@@ -141,26 +159,18 @@ nav {
 .fsp-picker .fsp-url-source__submit-button {
   width: 30px;
   border: 1px solid #2e68fb;
-  padding:0;
+  padding: 0;
 }
 
-.picker-content{
+.picker-content {
   width: 100%;
 }
 
-/* sorting css */
-.ascending::after {
-  content: "🔼";
-}
-
-.descending::after {
-  content: "🔽";
-}
-.upload-header{
-  text-align: center ;
+.upload-header {
+  text-align: center;
   margin-top: 1rem;
 }
-.route-options-list{
+.route-options-list {
   list-style: decimal;
   width: 100%;
   overflow: auto;
@@ -169,20 +179,31 @@ nav {
 }
 
 .route-options-list-item,
-.route-options-list-item-collapsible{
-  margin-bottom: .5rem;
+.route-options-list-item-collapsible {
+  margin-bottom: 0.5rem;
 }
-.route-options-list-item{
+.route-options-list-item {
   border-bottom: 1px dashed #000000;
 }
-.route-options-list-item:hover{
+.route-options-list-item:hover {
   color: #61dafb;
   /* text-decoration: underline; */
-  opacity: .8;
+  opacity: 0.8;
   cursor: pointer;
 }
-.route-options-list-item-collapsible{
+.route-options-list-item-collapsible {
   border: 1px solid black;
   border-top: none;
-  padding: .25rem;
+  padding: 0.25rem;
+}
+
+@media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 576px) {
+  #mainContainer {
+    padding: 1rem 0;
+  }
+  #heading {
+    font-size: 1.5rem;
+  }
 }

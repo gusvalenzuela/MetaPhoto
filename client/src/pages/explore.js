@@ -1,130 +1,116 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
-  Header,
   Container,
-  Input,
-  Button,
   Grid,
-  Dropdown,
-  Label,
   Tab,
+  Input,
+  Form,
+  Icon,
+  Dropdown,
+  Button,
 } from "semantic-ui-react";
 import Card from "../Components/card";
-import MenuBar from "../Components/Menu";
 import API from "../utils/API";
 import UserContext from "../context/userContext";
 import UserImageCard from "../Components/userImageCard";
 import UTILS from "../utils/utils.js";
 
+import cachedRoutes from "../utils/cacheRoutes.json";
+
 function Explore() {
   const user = useContext(UserContext);
   const [UserPhotos, setUserPhotos] = useState([]);
   const [localClimbs, setLocalClimbs] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("Lake Tahoe");
-  const [range, setRange] = useState(["30"]);
+  const [searchTerm, setSearchTerm] = useState({
+    current: "Lake Tahoe, CA",
+    past: "",
+  });
+  const [range, setRange] = useState(30);
   const [sortKey, setSortKey] = useState("name");
-
-  const style =
-    localClimbs.length > 4
-      ? { maxHeight: "500px", overflow: "scroll" }
-      : { maxHeight: "500px" };
-
-  const panes = [
+  const sortResultsOptions = [
     {
-      menuItem: {
-        key: "0",
-        content: "Local Climbs",
-        style: { backgroundColor: "#ffffff" },
-      },
-      render: () => (
-        <Tab.Pane>
-          <Grid stackable id="cardGrid" columns="4" style={style}>
-            {cardBuilder(sortedClimbs ? sortedClimbs : localClimbs, "card ")}
-          </Grid>
-        </Tab.Pane>
-      ),
+      key: "name",
+      value: "name",
+      text: "Name",
     },
     {
-      menuItem: {
-        key: "1",
-        content: "User Photos",
-        style: { backgroundColor: "#ffffff" },
-      },
-      render: () => (
-        <Tab.Pane>
-          <Grid stackable id="cardGrid" columns="4" style={style}>
-            {cardBuilder(UserPhotos, "userImageCard")}
-          </Grid>
-        </Tab.Pane>
-      ),
+      key: "stars",
+      value: "stars",
+      text: "Popularity",
+    },
+    {
+      key: "rating",
+      value: "rating",
+      text: "Difficulty",
+    },
+    {
+      key: "proximity",
+      value: "proximity",
+      text: "Proximity",
     },
   ];
-  const Options = [
-    { key: 5, text: "5", value: 5, description: "miles" },
-    { key: 10, text: "10", value: 10, description: "miles" },
-    { key: 15, text: "15", value: 15, description: "miles" },
-    { key: 20, text: "20", value: 20, description: "miles" },
-    { key: 25, text: "25", value: 25, description: "miles" },
-    { key: 30, text: "30", value: 30, description: "miles" },
-  ];
-
-  const sortOptions = [
-    { text: "Name", value: "name", key: 0 },
-    { text: "Difficulty", value: "rating", key: 1 },
-    { text: "Popularity", value: "stars", key: 2 },
-    { text: "Proximity", value: "proximity", key: 3 },
-  ];
-
-  useEffect(() => {
-    // get location from browser to get climbs
-    // on mount
-    navigator.geolocation.getCurrentPosition((resp) => {
-      // console.log(resp);
-      API.getRoutesByNavigator(resp, 30).then((data) => {
-        let { routes } = data.data;
-        let Routes = [];
-        routes.forEach((route) => {
-          if (route.imgMedium !== "") {
-            Routes.push(route);
-          }
-        });
-        var updatedRoutes = Routes.map((route) => {
-          // adding a "proximity" factor to use in sorting
-          let proximity = UTILS.calculateDistance(
-            resp.coords.latitude,
-            resp.coords.longitude,
-            route.latitude,
-            route.longitude,
-            "K"
-          );
-          return { ...route, proximity: proximity };
-        });
-
-        setLocalClimbs(updatedRoutes);
-      });
-    });
-
-    API.getPhoto().then((data) => {
-      // console.log(data);
-      setUserPhotos(data.data);
-    });
-  }, []);
 
   const {
     items: sortedClimbs,
     requestSort,
     sortConfig,
   } = UTILS.useSortableData(localClimbs);
-  const getClassNamesFor = (name) => {
-    if (!sortConfig) {
-      return;
-    }
-    return sortConfig.key === name ? sortConfig.direction : undefined;
-  };
 
-  function upperCaser(string) {
-    return string.substring(0, 1).toUpperCase() + string.substring(1);
-  }
+  useEffect(() => {
+    // FOR DEVELOPMENT
+    let { routes } = cachedRoutes;
+    let Routes = [];
+    routes.forEach((route) => {
+      if (route.imgMedium !== "") {
+        Routes.push(route);
+      }
+    });
+    var updatedRoutes = Routes.map((route) => {
+      // adding a "proximity" factor to use in sorting
+      let proximity = UTILS.calculateDistance(
+        39.55,
+        -123.4384,
+        route.latitude,
+        route.longitude,
+        "K"
+      );
+      return { ...route, proximity: proximity };
+    });
+    setSearchTerm({ ...searchTerm, past: searchTerm.current });
+    setLocalClimbs(updatedRoutes);
+
+    // get location from browser to get climbs
+    // on mount
+    // navigator.geolocation.getCurrentPosition((resp) => {
+    //   // console.log(resp);
+    //   API.getRoutesByNavigator(resp, range).then((data) => {
+    //     let { routes } = data.data;
+    //     let Routes = [];
+    //     routes.forEach((route) => {
+    //       if (route.imgMedium !== "") {
+    //         Routes.push(route);
+    //       }
+    //     });
+    //     var updatedRoutes = Routes.map((route) => {
+    //       // adding a "proximity" factor to use in sorting
+    //       let proximity = UTILS.calculateDistance(
+    //         resp.coords.latitude,
+    //         resp.coords.longitude,
+    //         route.latitude,
+    //         route.longitude,
+    //         "K"
+    //       );
+    //       return { ...route, proximity: proximity };
+    //     });
+    //     setSearchTerm({ ...searchTerm, past: searchTerm.current });
+    //     setLocalClimbs(updatedRoutes);
+    //   });
+    // });
+
+    API.getPhoto().then((data) => {
+      setUserPhotos(data.data);
+    });
+  }, []);
 
   function cardBuilder(array, type) {
     return array.map((data, index) => {
@@ -140,94 +126,200 @@ function Explore() {
     });
   }
 
-  const [currentSort, setCurrentSort] = useState("Name");
+  const getLocalClimbs = () => {
+    if (searchTerm.current !== "") {
+      API.getRoutesbySearch(searchTerm.current).then((res) => {
+        let coordsObj = {
+          coords: {
+            latitude: res.data.results[0].locations[0].latLng.lat,
+            longitude: res.data.results[0].locations[0].latLng.lng,
+          },
+        };
+        // console.log(searchTerm, range)
+        API.getRoutesByNavigator(coordsObj, range).then((data) => {
+          let { routes } = data.data;
+          let Routes = [];
+          routes.forEach((route) => {
+            if (route.imgMedium !== "") {
+              Routes.push(route);
+            }
+          });
+          var updatedRoutes = Routes.map((route) => {
+            // adding a "proximity" factor to use in sorting
+            let proximity = UTILS.calculateDistance(
+              coordsObj.coords.latitude,
+              coordsObj.coords.longitude,
+              route.latitude,
+              route.longitude,
+              "K"
+            );
+            return { ...route, proximity: proximity };
+          });
+          setSearchTerm({ ...setSearchTerm, past: searchTerm.current });
+          setLocalClimbs(updatedRoutes);
+        });
+      });
+    }
+  };
+
+  const panes = [
+    {
+      menuItem: {
+        key: "0",
+        content: "Local Climbs",
+        style: { backgroundColor: "#ffffff" },
+      },
+      render: () => (
+        <Tab.Pane
+          style={{
+            display: "grid",
+            gridTemplateRows: "auto 1fr 650px",
+            overflow: "auto",
+          }}
+        >
+          <Form stackable style={{ backgroundColor: "#fff", padding: "1rem" }}>
+            <Form.Group
+              style={{ justifyContent: "center", alignItems: "center" }}
+            >
+              <Form.Field>
+                <span>
+                  <Input
+                    required
+                    label="Climbs Near: "
+                    icon={
+                      <Icon
+                        inverted
+                        name="search"
+                        circular
+                        link
+                        onClick={() => {
+                          getLocalClimbs();
+                        }}
+                      />
+                    }
+                    onChange={(e) => {
+                      setSearchTerm({
+                        ...searchTerm,
+                        current: e.currentTarget.value,
+                      });
+                    }}
+                    placeholder={searchTerm.past}
+                  />
+                </span>
+              </Form.Field>
+              <Form.Dropdown
+                inline
+                // header="Search Radius"
+                compact
+                selection
+                onChange={(e, { value }) => {
+                  setRange(value);
+                }}
+                defaultValue={30}
+                options={[
+                  {
+                    selected: true,
+                    key: "15",
+                    text: "15 Miles",
+                    value: 15,
+                  },
+                  {
+                    key: "30",
+                    text: "30 Miles",
+                    value: 30,
+                  },
+                  {
+                    key: "50",
+                    text: "50 Miles",
+                    value: 50,
+                  },
+                  {
+                    key: "100",
+                    text: "100 Miles",
+                    value: 100,
+                  },
+                  {
+                    key: "150",
+                    text: "150 Miles",
+                    value: 150,
+                  },
+                  {
+                    key: "200",
+                    text: "200 Miles",
+                    value: 200,
+                  },
+                ]}
+              />
+            </Form.Group>
+          </Form>
+          <div className="sort-search-container">
+            <span>
+              <Button
+                style={{
+                  backgroundColor: "transparent",
+                  color: `${
+                    sortConfig.direction === "ascending" ? "#000" : "#aaa"
+                  }`,
+                }}
+                className="sort-button"
+                onClick={() => {
+                  requestSort(sortKey);
+                }}
+                icon={
+                  sortConfig.direction === "ascending"
+                    ? "sort amount up"
+                    : "sort amount down"
+                }
+                text="Sort"
+              />
+              Sort results by{" "}
+              <Dropdown
+                inline
+                options={sortResultsOptions}
+                defaultValue={sortResultsOptions[0].value}
+                onChange={(e, { value }) => {
+                  // at each selection
+                  setSortKey(value);
+                  requestSort(value);
+                }}
+              />
+            </span>
+          </div>
+          <div id="cardGrid">
+            {sortedClimbs ? (
+              cardBuilder(sortedClimbs, "card")
+            ) : (
+              <h2>Please begin a new search above</h2>
+            )}
+          </div>
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: {
+        key: "1",
+        content: "User Photos",
+        style: { backgroundColor: "#ffffff" },
+      },
+      render: () => (
+        <Tab.Pane
+          style={{
+            display: "grid",
+            gridTemplateRows: "768px",
+            overflow: "auto",
+          }}
+        >
+          <div id="cardGrid">{cardBuilder(UserPhotos, "userImageCard")}</div>
+        </Tab.Pane>
+      ),
+    },
+  ];
 
   return (
-    <Container id="mainContainer">
-      <MenuBar />
-      <Header as="h1" id="heading" attached="top">
-        Routes Near: {searchTerm ? upperCaser(searchTerm) : "You!"}
-      </Header>
-
-      <Container textAlign="center" text style={{ margin: "5px 0" }}>
-        <Input
-          style={{ width: "99%", margin: "auto", padding: "3px 0" }}
-          fluid
-          placeholder="City, State"
-          onChange={(e) => setSearchTerm(e.target.value)}
-          labelPosition="right"
-          label={{
-            as: Button,
-            content: "search",
-            onClick: () => {
-              API.getRoutesbySearch(searchTerm).then((res) => {
-                let coordsObj = {
-                  coords: {
-                    latitude: res.data.results[0].locations[0].latLng.lat,
-                    longitude: res.data.results[0].locations[0].latLng.lng,
-                  },
-                };
-                API.getRoutesByNavigator(coordsObj, range).then((data) => {
-                  let { routes } = data.data;
-                  let Routes = [];
-                  routes.forEach((route) => {
-                    if (route.imgMedium !== "") {
-                      Routes.push(route);
-                    }
-                  });
-                  var updatedRoutes = Routes.map((route) => {
-                    // adding a "proximity" factor to use in sorting
-                    let proximity = UTILS.calculateDistance(
-                      coordsObj.coords.latitude,
-                      coordsObj.coords.longitude,
-                      route.latitude,
-                      route.longitude,
-                      "K"
-                    );
-                    return { ...route, proximity: proximity };
-                  });
-
-                  setLocalClimbs(updatedRoutes);
-                });
-              });
-            },
-          }}
-        />
-        <Dropdown
-          as={Label}
-          inline
-          text={"Radius: " + range + " miles"}
-          options={Options}
-          onChange={(e, value) => setRange(value.value)}
-        />
-      </Container>
-
-      <Label style={{ margin: "auto", display: "table" }}>
-        <Dropdown
-          as={Label}
-          inline
-          text={`Sort Search Results by: ${currentSort} `}
-          options={sortOptions}
-          onChange={(e, value) => {
-            setSortKey(value.value);
-            let yes = value.options.filter((i) =>
-              i.value === value.value ? i.text : null
-            );
-            setCurrentSort(yes[0].text);
-          }}
-        />
-        <Button
-          className={getClassNamesFor(sortKey) || sortConfig.direction}
-          onClick={() => {
-            requestSort(sortKey);
-          }}
-        />
-      </Label>
-
-      <Container>
-        <Tab panes={user.user.username ? panes : [panes[0]]} />
-      </Container>
-    </Container>
+    <div id="mainContainer">
+      <Tab panes={panes} /> 
+      {/* <Tab panes={user.user.username ? panes : [panes[0]]} /> */}
+    </div>
   );
 }
 

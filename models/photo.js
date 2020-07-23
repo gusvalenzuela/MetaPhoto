@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const PhotosSchema = new Schema({
+const PhotoSchema = new Schema({
   // photoID: { type: String, required: true },
   url: { type: String, required: true },
   handle: { type: String, required: false },
@@ -18,6 +18,6 @@ const PhotosSchema = new Schema({
   date: { type: Date, default: Date.now },
 });
 
-const Photos = mongoose.model("Photos", PhotosSchema);
+const Photo = mongoose.model("Photo", PhotoSchema);
 
-module.exports = Photos;
+module.exports = Photo;

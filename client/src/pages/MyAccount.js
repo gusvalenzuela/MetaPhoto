@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import API from "../utils/API";
 import {
   Container,
@@ -13,9 +13,7 @@ import {
   Dropdown,
   Button,
 } from "semantic-ui-react";
-import MenuBar from "../Components/Menu";
 import UserContext from "../context/userContext";
-import UserCard from "../Components/userImageCard";
 
 function Users() {
   const [UserPhotos, setUserPhotos] = useState([]);
@@ -25,26 +23,21 @@ function Users() {
     ? { maxHeight: "500px", overflow: "scroll" }
     : { maxHeight: "500px" };
 
-  function getUserPhotos() {
-    API.getUsersPhotos(user.user._id).then((data) => {
-      setUserPhotos(data.data);
-    });
-  }
-
   function upperCaser(string) {
     return string.substring(0, 1).toUpperCase() + string.substring(1);
   }
-
   useEffect(() => {
-    getUserPhotos();
+    API.getUsersPhotos(user.user._id).then((data) => {
+      console.log(data);
+      setUserPhotos(data.data);
+    });
   }, [user]);
 
   return (
     <Container id="mainContainer">
       <Header as="h1" id="heading" attached="top">
-        {(user.user.username) ? upperCaser(user.user.username) : 'User'}'s Account
+        {user.user.username ? upperCaser(user.user.username) : "User"}'s Account
       </Header>
-      <MenuBar />
       <Divider />
       <Grid as={Container} stackable columns="2">
         {/* This Column is a user Info Card and only takes up 4 grid columns */}
@@ -53,7 +46,7 @@ function Users() {
             <Image
               src={user.user.profile_photo ? user.user.profile_photo : null}
               alt="user pic"
-              style={{maxHeight: '250px'}}
+              style={{ maxHeight: "250px" }}
             />
             <Card.Header as="h1">
               Hello,{" "}
@@ -89,7 +82,12 @@ function Users() {
                       text: `Photos :  ${
                         user.user.favorites ? user.user.favorites.length : ""
                       }`,
-                      onClick: () => setUserPhotos(user.user.favorites.filter(photo => photo.type === 'photo' ? photo : null)),
+                      onClick: () =>
+                        setUserPhotos(
+                          user.user.favorites.filter((photo) =>
+                            photo.type === "photo" ? photo : null
+                          )
+                        ),
                     },
                     {
                       key: 2,
@@ -116,16 +114,20 @@ function Users() {
 
             <Grid
               style={style}
-              columns={UserPhotos.length < 4 ? UserPhotos.length : 3}
+              columns={
+                UserPhotos && UserPhotos.length < 4 ? UserPhotos.length : 3
+              }
               stackable
             >
-              {UserPhotos.map((photos, index) => {
-                return (
-                  <Grid.Column key={index}>
-                    <UserCard {...photos} />
-                  </Grid.Column>
-                );
-              })}
+              {/* {UserPhotos.length > 0
+                ? UserPhotos.map((photos, index) => {
+                    return (
+                      <Grid.Column key={index}>
+                        <UserCard {...photos} />
+                      </Grid.Column>
+                    );
+                  })
+                : null} */}
             </Grid>
           </Segment>
         </Grid.Column>

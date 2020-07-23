@@ -12,6 +12,11 @@ export default {
     return null;
   },
 
+  // checks if session is active with authenticated user
+  isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect("/login");
+  },
   convertResolution: function (x, y) {
     return `${((x * y) / 1000000).toFixed(1)}MP`;
   },
@@ -96,5 +101,4 @@ export default {
       return dist;
     }
   },
-
 };

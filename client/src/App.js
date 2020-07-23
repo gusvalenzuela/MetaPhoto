@@ -14,6 +14,7 @@ import LogIn from "./pages/LogIn";
 import Settings from "./pages/Settings.js";
 import LogOut from "./pages/Logout";
 import NotFound from "./pages/404";
+import MenuBar from "./Components/Menu";
 import UserContext from "../src/context/userContext";
 import "./index.css";
 import "./App.css";
@@ -21,54 +22,54 @@ require(`dotenv`).config();
 
 export default function App() {
   const [user, setUser] = useState({});
+
   const Login = (User) => {
     setUser(User);
   };
 
-  useEffect(() => {
-    fetch("/user")
-      .then((res) => res.json())
-      .then((res) => {
-        setUser(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
   return (
-    <Router>
-      <UserContext.Provider value={{ user, Login }}>
+    <UserContext.Provider value={{ user, Login }}>
+      <Router>
         <Switch>
           <Route exact path={["/explore", "/"]}>
+            <MenuBar />
             <Explore />
           </Route>
           <Route exact path="/myaccount">
-            {!Object.keys(user).length ? <Redirect to="/" /> : <MyAccount />}
+            <MenuBar />
+            {!user.username ? <Redirect to="/" /> : <MyAccount />}
           </Route>
           <Route exact path="/resources">
+            <MenuBar />
             <Resources />
           </Route>
           <Route exact path="/upload">
+            <MenuBar />
             <Upload />
-            {/* {!Object.keys(user).length ? <Redirect to="/login" /> : <Upload />} */}
+            {/* {!user.username? <Redirect to="/login" /> : <Upload />} */}
           </Route>
           <Route exact path="/login">
-            {!Object.keys(user).length ? <LogIn /> : <Redirect to="/" />}
+            <MenuBar />
+            {!user.username ? <LogIn /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/signup">
-            {!Object.keys(user).length ? <SignUp /> : <Redirect to="/" />}
+            <MenuBar />
+            {!user.username ? <SignUp /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/settings">
+            <MenuBar />
             <Settings />
           </Route>
           <Route exact path="/logout">
-            {!Object.keys(user).length ? <LogOut /> : <Redirect to="/login" />}
+            <MenuBar />
+            {!user.username ? <LogOut /> : <Redirect to="/login" />}
           </Route>
           <Route>
+            <MenuBar />
             <NotFound />
           </Route>
         </Switch>
-      </UserContext.Provider>
-    </Router>
+      </Router>
+    </UserContext.Provider>
   );
 }

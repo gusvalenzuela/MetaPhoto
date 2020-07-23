@@ -5,7 +5,6 @@ import UTILS from "../utils/utils";
 import ReactLoading from "react-loading";
 import { Header, Container, Input, Button } from "semantic-ui-react";
 import UserContext from "../context/userContext";
-import MenuBar from "../Components/Menu";
 
 const client = require("filestack-js").init(
   process.env.REACT_APP_FILESTACK_KEY
@@ -220,7 +219,6 @@ function Upload() {
       <Header attached="top" as="h1" id="heading">
         MetaPhoto
       </Header>
-      <MenuBar />
       <div
         className="upload-header"
         style={{

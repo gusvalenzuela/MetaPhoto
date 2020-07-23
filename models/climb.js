@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const RoutesSchema = new Schema({
-  routeID: { type: String },
+const ClimbSchema = new Schema({
   name: { type: String, required: true },
   rating: { type: String, required: false },
   location: [],
   url: { type: String, required: false },
 });
 
-const Routes = mongoose.model("Routes", RoutesSchema);
+const Climb = mongoose.model("Climb", ClimbSchema);
 
-module.exports = Routes;
+module.exports = Climb;

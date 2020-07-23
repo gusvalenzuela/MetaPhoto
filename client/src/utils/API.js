@@ -3,10 +3,15 @@ import axios from "axios";
 export default {
   // Gets all routes by lat,lon
   getRoutesByNavigator: function (GPS, range) {
-    const queryURI = `https://www.mountainproject.com/data/get-routes-for-lat-lon?lat=${GPS.coords.latitude}&lon=${GPS.coords.longitude}&maxDistance=${range}&key=200765490-6a4f3ccdce84ab9b6225f209a2b16baf`;
+    let lat = GPS.coords.latitude.toFixed(4);
+    let lon = GPS.coords.longitude.toFixed(4);
+    let apiKey = process.env.REACT_APP_MOUNTAIN_API_KEY;
+
+    const queryURI = `https://www.mountainproject.com/data/get-routes-for-lat-lon?lat=${lat}&lon=${lon}&maxDistance=${range}&key=${apiKey}`;
+    console.log(queryURI);
     return axios.get(queryURI);
   },
-  getRoutesbySearch: function (searchTerm) {
+  getRoutesbySearch: function (searchTerm = "Lake Tahoe") {
     const geoCodeKey = "jmu2hzM4mHMBWSGPseb1cGFiAZ4CSPKI";
     const url =
       "https://www.mapquestapi.com/geocoding/v1/address?key=" +
@@ -19,11 +24,10 @@ export default {
     return axios.get("/api/resources");
   },
   getPhoto: function () {
-    return axios.get("/api/photo");
+    return axios.get("/api/photos");
   },
   getUsersPhotos: function (id) {
-    // console.log(id);
-    return axios.get("/api/photo" + id);
+    return axios.get("/api/photos/user=" + id);
   },
   getPhotoByHandle: function (handle) {
     return axios.get("/api/photohandle" + handle);
@@ -63,7 +67,7 @@ export default {
       typeOf: data.typeOf,
       userID: data.userID,
     };
-    return axios.post("/api/photo" + id, Like);
+    return axios.post("/api/photos/" + id, Like);
   },
   postFavorite: function (id, data) {
     let Fav = {
@@ -81,17 +85,15 @@ export default {
   },
 
   register: function (NewUser) {
-    console.log("step 2", NewUser);
-    return axios.post(`/register`, NewUser, {
-      withCredentials: true,
-    });
+    return axios.post(`/auth/signup`, NewUser);
   },
-  login: function (loginUsername, loginPassword) {
+
+  login: function (user, pass) {
     return axios.post(
-      `/login`,
+      `/auth/login`,
       {
-        username: loginUsername,
-        password: loginPassword,
+        username: user,
+        password: pass,
       },
       {
         withCredentials: true,

@@ -2,10 +2,18 @@ import React, { useState, useContext } from "react";
 import API from "../utils/API";
 // import UTILS from "../utils/utils";
 import UserContext from "../context/userContext";
-import { Container, Header, Segment, Image, Grid, Divider, Button } from "semantic-ui-react";
-import MenuBar from "../Components/Menu.js"
+import {
+  Container,
+  Header,
+  Segment,
+  Image,
+  Grid,
+  Divider,
+  Button,
+} from "semantic-ui-react";
+import MenuBar from "../Components/Menu.js";
 const client = require("filestack-js").init(
-  process.env.REACT_FILESTACK_KEY || "ASqRy0SxoR0GwFXKGloCDz"
+  process.env.REACT_APP_FILESTACK_KEY
 );
 
 function Settings() {
@@ -24,7 +32,7 @@ function Settings() {
     maxFiles: 3, // defaults to 1
     maxSize: 1024 * 1024 * 10, // limiting to 10Mb , because we can
     // modalSize: [500,500], // [Width, Height]; optional
-    onCancel: () => { },
+    onCancel: () => {},
     onFileUploadFailed: (file, err) => {
       console.log(file, err);
     },
@@ -48,14 +56,14 @@ function Settings() {
   });
 
   return (
-    <Container id='mainContainer'>
+    <Container id="mainContainer">
       <Header id="heading" as="h1">
         My Account Settings
       </Header>
       <MenuBar />
 
       {newAvatar !== null ? (
-        <Container textAlign='center'>
+        <Container textAlign="center">
           <h3>Confirm: </h3>
           <Image
             centered
@@ -64,12 +72,12 @@ function Settings() {
               newAvatar ||
               "https://cdn.filestackcontent.com/dQ3y6HCTSuXgf0chbf9e"
             }
-          style={{ maxHeight: '500px'}}
+            style={{ maxHeight: "500px" }}
           ></Image>
           <Button
             onClick={() => {
               // console.log(`clicky clicky`);
-              window.location.href = "/myaccount"
+              window.location.href = "/myaccount";
             }}
             style={{ margin: "0 2rem 0 1rem" }}
           >
@@ -77,30 +85,37 @@ function Settings() {
           </Button>
         </Container>
       ) : (
-          <Segment>
-            <Header className="yes">Change Profile Photo:</Header>
-            <Grid celled columns='2'>
-              <Grid.Column widths='8'>
-                <span>Current Photo:
-                  <Divider />
-                  <Image src={(UserData.user.profile_photo) ? UserData.user.profile_photo : null} />
-                </span>
-              </Grid.Column>
-              <Grid.Column widths='8'>Upload New Photo:
+        <Segment>
+          <Header className="yes">Change Profile Photo:</Header>
+          <Grid celled columns="2">
+            <Grid.Column widths="8">
+              <span>
+                Current Photo:
+                <Divider />
+                <Image
+                  src={
+                    UserData.user.profile_photo
+                      ? UserData.user.profile_photo
+                      : null
+                  }
+                />
+              </span>
+            </Grid.Column>
+            <Grid.Column widths="8">
+              Upload New Photo:
               <Divider />
-                <button
-                  onClick={() => {
-                    picker.open();
-                  }}
-                  style={{ margin: "0 0 0 1rem" }}
-                >
-                  Upload
-          </button></Grid.Column>
-            </Grid>
-
-
-          </Segment>
-        )}
+              <button
+                onClick={() => {
+                  picker.open();
+                }}
+                style={{ margin: "0 0 0 1rem" }}
+              >
+                Upload
+              </button>
+            </Grid.Column>
+          </Grid>
+        </Segment>
+      )}
     </Container>
   );
 }

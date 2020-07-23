@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Card, Icon, Menu, Label, List } from "semantic-ui-react";
 import UserContext from "../context/userContext";
-import API from '../utils/API'
+import API from "../utils/API";
 
 const RouteCard = (props) => {
   const userData = useContext(UserContext);
@@ -9,7 +9,6 @@ const RouteCard = (props) => {
 
   function handleVoting(evt, type) {
     if (type === "up") {
-      // console.log(`♥‿♥`, userData.user._id);
       API.postLike(userData.user._id, {
         typeOf: "like",
         userID: userData.id,
@@ -17,7 +16,6 @@ const RouteCard = (props) => {
         setNewUpdate({ ...newUpdate }); // "tricking" it to refresh photoratings
       });
     } else {
-      // console.log(`(ಥ⌣ಥ)`);
       API.postLike(userData.user._id, {
         typeOf: "dislike",
         userID: userData.id,
@@ -27,13 +25,15 @@ const RouteCard = (props) => {
   }
 
   return (
-    <Card style={{ height: "350px", minWidth: '200px', margin: 'auto' }}>
+    <Card>
       <Card.Content
         style={{
           height: "200px",
-          backgroundImage:  `url(${(props.imgSmallMed) ? props.imgSmallMed : props.photo})`,
+          backgroundImage: `url(${
+            props.imgSmallMed ? props.imgSmallMed : props.photo
+          })`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "center center",
         }}
       >
         <Label
@@ -43,21 +43,28 @@ const RouteCard = (props) => {
           // onClick={() => console.log("cricket")}
         />
       </Card.Content>
-      <Card.Content style={{ maxHeight: "140px" }}>
+      <Card.Content>
         <Card.Header>{props.name} </Card.Header>
         <Card.Description>
           {props.desc ? (
             <div>{props.desc}</div>
           ) : (
             <div>
-              {props.rating} || {props.stars} 
-              <Icon name="star outline" />{" "} || {(props.type) ? 'Type: ' + props.type : null}  
-              {(props.proximity) ? <List.Item>{props.proximity.toFixed(2)} Miles Away</List.Item> : null}
+              Diff: {props.rating}
+              <br /> Popularity: {props.stars}
+              <Icon color="yellow" name="star outline" />
+              <br />
+              {props.type ? "Type: " + props.type : null}
+              {props.proximity ? (
+                <List.Item>~{props.proximity.toFixed(2)} mi. away</List.Item>
+              ) : null}
             </div>
           )}
           {props.location ? (
             <List>
-              <List.Item>{props.location[1] + ", " + props.location[0]}</List.Item>
+              <List.Item>
+                {props.location[1] + ", " + props.location[0]}
+              </List.Item>
             </List>
           ) : null}
         </Card.Description>

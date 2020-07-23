@@ -1,39 +1,121 @@
-import React, { useContext } from "react";
-import { Menu, Container } from "semantic-ui-react";
-import { Link, useHistory } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Menu } from "semantic-ui-react";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import UserContext from "../context/userContext";
 import API from "../utils/API";
 
 const MenuBar = () => {
-  const user = useContext(UserContext);
+  let urlLocation = useLocation();
+  const User = useContext(UserContext);
   const history = useHistory();
-  const userData = useContext(UserContext);
+  const [activeItem, setActiveItem] = useState(urlLocation.pathname.slice(1)); // setting initial state of whatever the ref is
+  // an array to loop an create menu items
+  const menuItems = [
+    {
+      name: "explore",
+    },
+    {
+      name: "resources",
+    },
+    {
+      name: "upload",
+    },
+    {
+      name: "logout",
+    },
+    {
+      name: "myaccount",
+      alternate: "My Account",
+    },
+  ];
+
+  const handleItemClick = (e, { name }) => setActiveItem(name);
 
   function logout() {
     API.logout();
-    user.Login({});
+    User.Login({});
     setTimeout(() => history.push("/"), 1500);
   }
 
   return (
-    <Container>
-      {userData.user.username ? (
-        <Menu inverted stackable id="navMenu" attached="bottom">
-          <Menu.Item as={Link} to="/explore" name="Explore" />
-          <Menu.Item as={Link} to="/myaccount" name="My Account" />
-          <Menu.Item as={Link} to="/upload" name="Upload" />
-          <Menu.Item as={Link} to="/resources" name="Resources" />
-          <Menu.Item as={Link} to="/logout" name="Logout" onClick={logout} />
-        </Menu>
-      ) : (
-        <Menu inverted stackable id="navMenu" attached="bottom">
-          <Menu.Item as={Link} to="/explore" name="Explore" />
-          <Menu.Item as={Link} to="/resources" name="Resources" />
-          <Menu.Item as={Link} to="/upload" name="Upload" />
-          <Menu.Item as={Link} to="/login" name="Login" />
-        </Menu>
-      )}
-    </Container>
+    <div id="menuContainer">
+      {/* <div>
+
+</div> */}
+      <Menu stackable inverted id="navMenu">
+        <Menu.Item inverted>
+          <i>MetaPhoto by GV</i>
+        </Menu.Item>
+
+        <Menu.Item
+          className={`menubar-item`}
+          active={activeItem === "explore"}
+          onClick={handleItemClick}
+          as={Link}
+          to="/explore"
+          name="explore"
+        />
+        <Menu.Item
+          className={`menubar-item`}
+          active={activeItem === "resources"}
+          onClick={handleItemClick}
+          as={Link}
+          to="/resources"
+          name="resources"
+        />
+        <Menu.Item
+          className={`menubar-item`}
+          active={activeItem === "upload"}
+          onClick={handleItemClick}
+          as={Link}
+          to="/upload"
+          name="upload"
+        />
+
+        {User.user.username ? (
+          <>
+            <Menu.Item
+              className={`menubar-item`}
+              active={activeItem === "logout"}
+              onClick={handleItemClick}
+              position="right"
+              as={Link}
+              to="/logout"
+              name="logout"
+              onClick={() => logout()}
+            />
+            <Menu.Item
+              as={Link}
+              className={`menubar-item`}
+              active={activeItem === "my account"}
+              onClick={handleItemClick}
+              to="/myaccount"
+              name="my account"
+            />
+          </>
+        ) : (
+          <>
+            <Menu.Item
+              className={`menubar-item`}
+              active={activeItem === "login"}
+              onClick={handleItemClick}
+              position="right"
+              as={Link}
+              to="/login"
+              name="login"
+            />
+            <Menu.Item
+              className={`menubar-item`}
+              active={activeItem === "signup"}
+              onClick={handleItemClick}
+              as={Link}
+              to="/signup"
+              name="signup"
+            />
+          </>
+        )}
+      </Menu>
+    </div>
   );
 };
 

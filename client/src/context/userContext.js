@@ -1,13 +1,5 @@
-import React from "react";
+import {createContext} from "react";
 
-const UserContext = React.createContext({
-  _id: "",
-  userName: "",
-  firstName: "",
-  lastName: "",
-  email: "",
-  favorites: [],
-  Login: () => {},
-});
+const UserContext = createContext({});
 
 export default UserContext;
