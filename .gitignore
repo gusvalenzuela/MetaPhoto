@@ -23,11 +23,11 @@ yarn-debug.log*
 yarn-error.log*
 
 #amplify
-client/4/\#current-cloud-backend
-client/4/.config/local-*
-client/4/mock-data
-client/4/backend/amplify-meta.json
-client/4/backend/awscloudformation
+client/amplify/\#current-cloud-backend
+client/amplify/.config/local-*
+client/amplify/mock-data
+client/amplify/backend/amplify-meta.json
+client/amplify/backend/awscloudformation
 client/build/
 client/dist/
 client/node_modules/

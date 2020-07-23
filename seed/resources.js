@@ -3,10 +3,7 @@ const db = require("../models");
 
 // This file empties the Books collection and inserts the books below
 
-mongoose.connect(
-  process.env.MONGODB_URI ||
-    "mongodb://user:password1@ds031948.mlab.com:31948/heroku_tmwz9gv0"
-);
+mongoose.connect(process.env.MONGODB_URI);
 
 const resourceSeed = [
   {
@@ -96,8 +93,8 @@ const resourceSeed = [
   },
 ];
 
-db.Resources.remove({})
-  .then(() => db.Resources.collection.insertMany(resourceSeed))
+db.Resource.remove({})
+  .then(() => db.Resource.collection.insertMany(resourceSeed))
   .then((data) => {
     console.log(data.result.n + " records inserted!");
     process.exit(0);
