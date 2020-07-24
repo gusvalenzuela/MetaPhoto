@@ -7,16 +7,16 @@ const session = require("express-session");
 const path = require("path");
 const logger = require(`morgan`);
 const compression = require(`compression`);
+const flash = require("connect-flash");
 const db = require("./models");
 const routes = require("./routes");
-const flash = require("connect-flash");
 const app = express();
 const MemoryStore = require('memorystore')(session)
 
 const PORT = process.env.PORT || 3001; // react running @ 3000
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/public"));
+  app.use(express.static("client/build"));
 }
 
 // Define middleware here
