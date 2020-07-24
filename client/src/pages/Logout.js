@@ -1,5 +1,4 @@
 import React from "react";
-import MenuBar from "../Components/Menu";
 import {
   Grid,
   Header,
@@ -14,7 +13,6 @@ function LogOut() {
     <Container id='mainContainer'>
 
         <Header attached='top' as="h1" id="heading"></Header>
-        <MenuBar />
 
       <Grid textAlign="center" verticalAlign="middle">
         <GridColumn style={{ maxWidth: 450 }}>

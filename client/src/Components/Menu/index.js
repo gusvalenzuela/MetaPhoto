@@ -1,33 +1,34 @@
 import React, { useContext, useState } from "react";
-import { Menu } from "semantic-ui-react";
+import { Menu, Button, Container } from "semantic-ui-react";
 import { useHistory, Link, useLocation } from "react-router-dom";
-import UserContext from "../context/userContext";
-import API from "../utils/API";
+import UserContext from "../../context/userContext";
+import API from "../../utils/API";
+import "./style.css";
 
-const MenuBar = () => {
+const MenuBar = ({ page }) => {
   let urlLocation = useLocation();
   const User = useContext(UserContext);
   const history = useHistory();
   const [activeItem, setActiveItem] = useState(urlLocation.pathname.slice(1)); // setting initial state of whatever the ref is
   // an array to loop an create menu items
-  const menuItems = [
-    {
-      name: "explore",
-    },
-    {
-      name: "resources",
-    },
-    {
-      name: "upload",
-    },
-    {
-      name: "logout",
-    },
-    {
-      name: "myaccount",
-      alternate: "My Account",
-    },
-  ];
+  // const menuItems = [
+  //   {
+  //     name: "explore",
+  //   },
+  //   {
+  //     name: "resources",
+  //   },
+  //   {
+  //     name: "upload",
+  //   },
+  //   {
+  //     name: "logout",
+  //   },
+  //   {
+  //     name: "myaccount",
+  //     alternate: "My Account",
+  //   },
+  // ];
 
   const handleItemClick = (e, { name }) => setActiveItem(name);
 
@@ -38,15 +39,15 @@ const MenuBar = () => {
   }
 
   return (
-    <div id="menuContainer">
-      {/* <div>
-
-</div> */}
+    <div className={page} id="menu-container">
       <Menu stackable inverted id="navMenu">
-        <Menu.Item inverted>
-          <i>MetaPhoto by GV</i>
+        <Menu.Item name="home" className={`menubar-item`} as={Link} to="/">
+          <img
+            alt="MetaPhoto Icon"
+            src="/images/rock-climb-unsplash-icon-150x150.jpg"
+          />
+          <i style={{ marginLeft: ".5rem", color: "#0a7" }}>MetaPhoto by GV</i>
         </Menu.Item>
-
         <Menu.Item
           className={`menubar-item`}
           active={activeItem === "explore"}
@@ -76,13 +77,11 @@ const MenuBar = () => {
           <>
             <Menu.Item
               className={`menubar-item`}
-              active={activeItem === "logout"}
-              onClick={handleItemClick}
+              onClick={logout}
               position="right"
               as={Link}
               to="/logout"
               name="logout"
-              onClick={() => logout()}
             />
             <Menu.Item
               as={Link}
@@ -115,6 +114,30 @@ const MenuBar = () => {
           </>
         )}
       </Menu>
+      {page === "home" ? (
+        <Container text className="home-nav-header">
+          <h1>MetaPHOTO by GV</h1>
+          <h3>Share your rock climbing adventures!</h3>
+          <Button
+            as={Link}
+            to="/explore"
+            size="huge"
+            color="vk"
+            content="Explore"
+          />
+          <Button
+            as={Link}
+            to="/upload"
+            size="huge"
+            color="vk"
+            content="Start Uploading"
+          />
+        </Container>
+      ) : (
+        <Container text className="other-nav-header">
+          <h3>Share your rock climbing adventures!</h3>
+        </Container>
+      )}
     </div>
   );
 };

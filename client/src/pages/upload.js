@@ -16,6 +16,7 @@ function Upload() {
   const [handles, setHandles] = useState([]);
   const [uploadedPhotos, setUploadedPhotos] = useState(null);
   const UserData = useContext(UserContext);
+  UserData.setActivePage("upload"); // sets the classname for the menubar container
   const [searchTerm, setSearchTerm] = useState("Lake Tahoe");
   // making stages per status codes, to keep track of steps
   // also serves as check for all files in a multiple-upload to be ready before moving on

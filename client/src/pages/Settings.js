@@ -11,7 +11,6 @@ import {
   Divider,
   Button,
 } from "semantic-ui-react";
-import MenuBar from "../Components/Menu.js";
 const client = require("filestack-js").init(
   process.env.REACT_APP_FILESTACK_KEY
 );
@@ -60,7 +59,6 @@ function Settings() {
       <Header id="heading" as="h1">
         My Account Settings
       </Header>
-      <MenuBar />
 
       {newAvatar !== null ? (
         <Container textAlign="center">

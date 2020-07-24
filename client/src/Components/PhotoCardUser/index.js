@@ -10,8 +10,8 @@ import {
     Grid,
     List,
 } from "semantic-ui-react";
-import API from "../utils/API";
-import userContext from "../context/userContext";
+import API from "../../utils/API";
+import userContext from "../../context/userContext";
 
 const ImageCard = (props) => {
   const userData = useContext(userContext);

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
-  Container,
   Grid,
   Tab,
   Input,
@@ -9,16 +8,18 @@ import {
   Dropdown,
   Button,
 } from "semantic-ui-react";
-import Card from "../Components/card";
+import Card from "../Components/PhotoCard";
 import API from "../utils/API";
 import UserContext from "../context/userContext";
-import UserImageCard from "../Components/userImageCard";
+import UserImageCard from "../Components/PhotoCardUser";
 import UTILS from "../utils/utils.js";
 
 import cachedRoutes from "../utils/cacheRoutes.json";
 
 function Explore() {
   const user = useContext(UserContext);
+
+  user.setActivePage("explore"); // sets the classname for the menubar container
   const [UserPhotos, setUserPhotos] = useState([]);
   const [localClimbs, setLocalClimbs] = useState([]);
   const [searchTerm, setSearchTerm] = useState({
@@ -76,7 +77,7 @@ function Explore() {
       );
       return { ...route, proximity: proximity };
     });
-    setSearchTerm({ ...searchTerm, past: searchTerm.current });
+
     setLocalClimbs(updatedRoutes);
 
     // get location from browser to get climbs
@@ -127,6 +128,7 @@ function Explore() {
   }
 
   const getLocalClimbs = () => {
+    console.log(searchTerm);
     if (searchTerm.current !== "") {
       API.getRoutesbySearch(searchTerm.current).then((res) => {
         let coordsObj = {
@@ -155,7 +157,10 @@ function Explore() {
             );
             return { ...route, proximity: proximity };
           });
-          setSearchTerm({ ...setSearchTerm, past: searchTerm.current });
+          setSearchTerm((s) => {
+            s.past = s.current;
+            return s;
+          });
           setLocalClimbs(updatedRoutes);
         });
       });
@@ -177,7 +182,7 @@ function Explore() {
             overflow: "auto",
           }}
         >
-          <Form stackable style={{ backgroundColor: "#fff", padding: "1rem" }}>
+          <Form style={{ backgroundColor: "#fff", padding: "1rem" }}>
             <Form.Group
               style={{ justifyContent: "center", alignItems: "center" }}
             >
@@ -317,8 +322,8 @@ function Explore() {
 
   return (
     <div id="mainContainer">
-      <Tab panes={panes} /> 
-      {/* <Tab panes={user.user.username ? panes : [panes[0]]} /> */}
+      {/* <Tab panes={panes} />  */}
+      <Tab panes={user.user.username ? panes : [panes[0]]} />
     </div>
   );
 }

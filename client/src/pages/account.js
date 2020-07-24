@@ -18,7 +18,7 @@ import UserContext from "../context/userContext";
 function Users() {
   const [UserPhotos, setUserPhotos] = useState([]);
   const user = useContext(UserContext);
-
+  user.setActivePage("account"); // sets the classname for the menubar container
   const style = UserPhotos.length
     ? { maxHeight: "500px", overflow: "scroll" }
     : { maxHeight: "500px" };

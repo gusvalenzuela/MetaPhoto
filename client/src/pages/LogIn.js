@@ -6,7 +6,6 @@ import {
   Header,
   Segment,
   Icon,
-  Divider,
   Container,
   Message,
   Modal,

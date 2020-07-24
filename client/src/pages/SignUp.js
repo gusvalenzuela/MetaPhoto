@@ -1,6 +1,4 @@
-import React, {
-  useState,
-} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -47,9 +45,8 @@ function SignUp() {
     });
   }
 
-
   return (
-    <Container className="mainContainer">
+    <div className="mainContainer">
       <Header id="heading" as="h1">
         Register your new account
       </Header>
@@ -129,7 +126,7 @@ function SignUp() {
           </Modal.Content>
         </Modal>
       ) : null}
-    </Container>
+    </div>
   );
 }
 

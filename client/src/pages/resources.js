@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import Card from "../Components/card";
+import React, { useState, useEffect, useContext } from "react";
+import Card from "../Components/PhotoCard";
 import { Grid, Header, Container, Divider } from "semantic-ui-react";
 import API from "../utils/API";
 import Background from "../assets/images/HenryXuUnsplash.png";
 import Background2 from "../assets/images/Charles.png";
+import UserContext from "../context/userContext";
 
 function Resources() {
   const [resources, setResources] = useState([]);
+  const { setActivePage } = useContext(UserContext);
+  setActivePage("explore"); // sets the classname for the menubar container
 
   useEffect(() => {
     getAllResources();
