@@ -11,6 +11,7 @@ const db = require("./models");
 const routes = require("./routes");
 const flash = require("connect-flash");
 const app = express();
+const MemoryStore = require('memorystore')(session)
 
 const PORT = process.env.PORT || 3001; // react running @ 3000
 
@@ -28,7 +29,10 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
-    // cookie: { secure: true }
+    cookie: { maxAge: 86400000, secure: true },
+    store: new MemoryStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    }),
   })
 );
 app.use(flash());
