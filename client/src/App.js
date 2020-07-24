@@ -10,7 +10,7 @@ import Upload from "./pages/upload";
 import Home from "./pages/home";
 import Explore from "./pages/explore";
 import Resources from "./pages/resources";
-import SignUp from "./pages/signup";
+import SignUp from "./pages/register";
 import LogIn from "./pages/login";
 import Settings from "./pages/settings";
 import LogOut from "./pages/logout";
