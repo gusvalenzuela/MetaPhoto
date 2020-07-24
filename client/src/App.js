@@ -12,7 +12,7 @@ import Explore from "./pages/explore";
 import Resources from "./pages/resources";
 import SignUp from "./pages/register";
 import LogIn from "./pages/signin";
-import Settings from "./pages/settingz";
+import Settings from "./pages/settings";
 import LogOut from "./pages/signout";
 import NotFound from "./pages/404";
 import MenuBar from "./Components/Menu";
